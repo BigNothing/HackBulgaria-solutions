@@ -19,12 +19,12 @@ public class WordGame {
 		
 		
 		// fill array with data
-		while(check != rows){
+		while(check != rows){    //first the rows
 			
 			System.out.println("Enter the chars in row " + (check+1));
 			puller = input.next();
 			
-			while(step != cols){
+			while(step != cols){    //after that the cols
 				
 				table[check][step] = puller.charAt(step);
 				step++;
@@ -44,15 +44,15 @@ public class WordGame {
 		for( i =0; i<rows ; i++){     
 			// from left to right
 			for( n= 0 ; n<cols; n++){
-				 if(word.charAt(0)==table[i][n]){
+				 if(word.charAt(0)==table[i][n]){      //if the first char form the word is equal...
 					 
-					 while(word.charAt(wordStep)==table[i][n]){
+					 while(word.charAt(wordStep)==table[i][n]){  // this loop checks if there is a word
 						 n++;
 						 wordStep++;
 						 if(n>cols-1){
 							 break;
 						 }
-						 if(wordStep==(wordLength-1)){
+						 if(wordStep==(wordLength-1)){ //if there are enought equal chars in the table there is word
 							 occurs++;
 							 break;
 						 }
@@ -126,10 +126,10 @@ public class WordGame {
 		
 		//across left to right
 		j=rows-1;
-		while(j>=0){
-			i=j;
+		while(j>=0){   // this loop moves up form the bottom left cell 
+			i=j;   
 			n=0;
-			while(i<rows && n<cols){
+			while(i<rows && n<cols){  // this loop moves across down-right form the left 
 				
 				if(word.charAt(0)==table[i][n]){
 					 
@@ -151,8 +151,8 @@ public class WordGame {
 				n++;
 			}
 			
-			if(j==0){
-				k=1;
+			if(j==0){  // when j==0 we had searched for words in the left part of the table now is turn for the right
+				k=1;  // this variable moves throught top left cell to top right
 				while(k<cols){
 					n=k;
 					i=0;
