@@ -1,0 +1,102 @@
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
+
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public class PackageManeger {
+
+	private static final String depPath = "C:\\package\\dependencies.json";
+	private static final String packsPath = "C:\\package\\all_packages.json";
+	private static final String installDir = "C:\\package\\installed_modules\\";
+	
+	public static void main(String[] args) {
+
+		try {
+			File installFile ;
+			Boolean finishFlag = false;
+			int count;
+			
+			// read the json file
+			FileReader depReader = new FileReader(depPath);
+			FileReader packsReader = new FileReader(packsPath);
+
+			JSONParser depParser = new JSONParser();
+			JSONObject depObject = (JSONObject) depParser.parse(depReader);
+
+			JSONParser packsParser = new JSONParser();
+			JSONObject packsObject = (JSONObject) packsParser.parse(packsReader);
+			
+			// get a String from the JSON object
+			String projectName = (String) depObject.get("projectName");
+			System.out.println("The project name is: " + projectName);
+			
+
+			// get an array from the JSON object
+			JSONArray deps= (JSONArray) depObject.get("dependencies");
+			JSONArray checkArr;
+			
+			// take the elements of the json array
+			for(int i=0; i<deps.size(); i++){
+				System.out.println("Installing "+deps.get(i));
+				JSONArray packs= (JSONArray) packsObject.get(deps.get(i));
+				
+				
+				while(!finishFlag){
+					System.out.println("In order to install "+ deps.get(i) + ",we need "+packs.get(i)+" and "+packs.get(i+1));
+					count=packs.size();
+					
+					while(count>0){
+						System.out.println("Installing "+ packs.get(i));
+						checkArr = (JSONArray) packsObject.get(packs.get(i));
+						
+						if(checkArr.size()>0){
+							System.out.println("In order to install "+ packs.get(i) + ", we need " + checkArr.get(0) +". ");
+							
+							installFile= new File (installDir+checkArr.get(0));
+							
+							if(installFile.exists()) {
+							    System.out.print(checkArr.get(0)+" is already installed\n");
+							}else{
+								installFile.createNewFile();
+								System.out.println("Installing "+ checkArr.get(0));
+							}
+						}
+						installFile= new File (installDir+packs.get(i));
+						
+						if(installFile.exists()) {
+						    System.out.print(checkArr.get(0)+" is already installed\n");
+						}else{
+							installFile.createNewFile();
+						}
+						i++;
+						count--;
+					}
+					
+					installFile= new File (installDir+deps.get(0));
+					installFile.createNewFile();
+					
+					finishFlag=true;
+				}
+				
+				
+			}
+
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+}
